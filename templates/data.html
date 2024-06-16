@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de predicción - Datos</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box-data-w">
+            <h1>Datos meteorológicos</h1>
+            <fieldset>
+                <legend>Predicción</legend>
+                <span class="label">Temperatura:</span>
+                <span id="w-temperature-24" class="values">{{w_temperature_24}}</span><br>
+                <span class="label">Viento:</span>
+                <span id="w-wind-24" class="values">{{w_wind_24}}</span><br>
+                <span class="label">UV:</span>
+                <span id="w-uv-24" class="values">{{w_uv_24}}</span>
+            </fieldset>
+            <fieldset>
+                <legend>Valores actuales</legend>
+                <span class="label">Temperatura:</span>
+                <span id="w-temperature-current" class="values">{{w_temperature_current}}</span>
+                <span class="label">Viento:</span>
+                <span id="w-wind-current" class="values">{{w_wind_current}}</span>
+                <span class="label">UV:</span>
+                <span id="w-uv-current" class="values">{{w_uv_current}}</span>
+            </fieldset>
+        </div>
+        <div class="box-data-e">
+            <h1>Datos eléctricos</h1>
+            <fieldset>
+                <legend>Valores de hoy</legend>
+                <span class="label">Precio medio:</span>
+                <span id="e-avg" class="values">{{e_avg}}</span><br>
+                <span class="label">Precio máximo:</span>
+                <span id="e-max" class="values">{{e_max}}</span><br>
+                <span class="label">Precio mínimo:</span>
+                <span id="e-min" class="values">{{e_min}}</span><br>
+                <span class="label">Próximos valores:</span>
+                <span id="e-nexts" class="values">{{e_nexts}}</span>
+            </fieldset>
+            <fieldset>
+                <legend>Valores actuales</legend>
+                <span class="label">Tiempo - Precio:</span>
+                <span id="e-current" class="values">{{electricity_current}}</span>
+            </fieldset>
+        </div>
+    </div>
+    <div class="button-container">
+        <a href="/" class="button-link">Volver</a>
+    </div>
+</body>
+</html>

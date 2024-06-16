@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de predicción - Configuración</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box-info">
+            <h1>¡Bienvenido al módulo de predicción!</h1>
+            <h2>
+                ¡Aquí podrás configurar según tus necesidades la predicción meteorológica y eléctrica!
+            </h2>
+            <h3>
+                En el formulario podrás seleccionar la fuente de la cual se obtendrá la información. Además, se puede indicar de forma muy sencilla si se desea obtener datos del
+                momento actual
+            </h3>
+            <h3>
+                Cómo nota indicar que los datos meteorológicos se pueden obtener de 4 fuentes distintas, pero no todas
+                las fuentes obtienen todos los parámetros. Por ello, si se desea obtener la mayor información posible, es recomendable
+                seleccionar la opción "Todas" del módulo de configuración meteorológico
+            </h3>
+            <h3>
+                Por último, indicar que sólo se obtienen
+                datos eléctricos de una sola fuente, ya que estos datos son únicos
+            </h3>
+        </div>
+        <div class="box-form">
+            <h1>Formulario de configuración</h1>
+            <form action="/execute" method="post" id="prediction-form">
+                <fieldset>
+                    <legend>Configuración de la meteorología</legend>
+                    <label for="weather-source">Elige una fuente de meteorología:</label><br>
+                    <select id="weather-source" name="weather-source">
+                        <option value="Aemet">Aemet</option>
+                        <option value="Open Weather">Open Weather</option>
+                        <option value="Tomorrow.io">Tomorrow.io</option>
+                        <option value="Weather Stack">Weather Stack</option>
+                        <option value="All">Todas</option>
+                    </select><br>
+                    <label>¿Quieres la información actual?</label><br>
+                    <label for="w-yes"><input type="radio" id="w-yes" name="w-option" value="yes" checked>Si</label>
+                    <label for="w-no"><input type="radio" id="w-no" name="w-option" value="no">No</label>
+                </fieldset>
+                <fieldset>
+                    <legend>Configuración de la electricidad</legend>
+                    <label for="electricity-source">Elige una fuente de electricidad:</label><br>
+                    <input type="text" id="electricity-source" name="electricity-source" value="Preciodelaluz.org" readonly><br>
+                    <label>¿Quieres la información actual?</label><br>
+                    <label for="e-yes"><input type="radio" id="e-yes" name="e-option" value="yes" checked>Si</label>
+                    <label for="e-no"><input type="radio" id="e-no" name="e-option" value="no">No</label>
+                </fieldset>
+        
+                <button type="submit">Ejecutar código</button>
+                <button type="reset">Limpiar datos</button>
+            </form>
+        </div>
+    </div> 
+</body>
+</html>
