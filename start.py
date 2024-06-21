@@ -77,4 +77,4 @@ def execute():
     return render_template('data.html', w_temperature_current=w_temperature_current, w_wind_current=w_wind_current, w_uv_current=w_uv_current, electricity_current=electricity_current, w_temperature_24=w_temperature_24, w_wind_24=w_wind_24, w_uv_24=w_uv_24, e_avg=electricity_data["AVG"], e_max=electricity_data["Max"]["Price"], e_min=electricity_data["Min"]["Price"], e_nexts=electricity_data["Next"])
 
 if __name__ == "__main__":
-    app.run(port=8000)
+    app.run(port=8080)
