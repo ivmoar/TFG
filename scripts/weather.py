@@ -22,14 +22,15 @@ class Weather:
                 indice = i
                 break
 
-        indice = len(TempList) - indice
-        TempList = TempList[-indice:]
-        TempList.extend(data[0]["prediccion"]["dia"][1]["temperatura"]) #TempList.extend(data[0]["prediccion"]["dia"][2]["temperatura"]) para conseguir los datos del siguiente día
+        if indice is not None:
+            indice = len(TempList) - indice
+            TempList = TempList[-indice:]
+            TempList.extend(data[0]["prediccion"]["dia"][1]["temperatura"]) #TempList.extend(data[0]["prediccion"]["dia"][2]["temperatura"]) para conseguir los datos del siguiente día
 
-        currentT = TempList.pop(0)
+            currentT = TempList.pop(0)
 
-        AemetJs["Current"]["temp"] = int(currentT["value"])
-        AemetJs["Temperature"] = [int(elemento["value"]) for elemento in TempList]
+            AemetJs["Current"]["temp"] = int(currentT["value"])
+            AemetJs["Temperature"] = [int(elemento["value"]) for elemento in TempList]
 
         #Datos viento
         WindList = data[0]["prediccion"]["dia"][0]["vientoAndRachaMax"]
@@ -39,15 +40,16 @@ class Weather:
                 indice = i
                 break
 
-        indice = len(WindList) - indice
-        WindList = WindList[-indice:]
-        WindList.extend(data[0]["prediccion"]["dia"][1]["vientoAndRachaMax"]) #WindList.extend(data[0]["prediccion"]["dia"][2]["vientoAndRachaMax"]) para conseguir los datos del siguiente día
-        WindList = WindList[::2]
+        if indice is not None:
+            indice = len(WindList) - indice
+            WindList = WindList[-indice:]
+            WindList.extend(data[0]["prediccion"]["dia"][1]["vientoAndRachaMax"]) #WindList.extend(data[0]["prediccion"]["dia"][2]["vientoAndRachaMax"]) para conseguir los datos del siguiente día
+            WindList = WindList[::2]
 
-        currentW = WindList.pop(0)
+            currentW = WindList.pop(0)
 
-        AemetJs["Current"]["wind"] = int(currentW["velocidad"][0])
-        AemetJs["Wind"] = [int(elemento["velocidad"][0]) for elemento in WindList]
+            AemetJs["Current"]["wind"] = int(currentW["velocidad"][0])
+            AemetJs["Wind"] = [int(elemento["velocidad"][0]) for elemento in WindList]
 
         return AemetJs
 
