@@ -115,7 +115,6 @@ class Weather:
 
         for i in range(24):
             aux = round(((list1[i] + list2[i] + list3[i]) / 3), 2)
-            #aux = round(((list1[i] + list2[i]) / 2), 2)
             AllJson["Temperature"].append(aux)
 
         #Obtener de la velocidad del viento promedio para las próximas 24 horas
