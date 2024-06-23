@@ -92,42 +92,14 @@ class Weather:
     def get_current(self):
         aemet = self.get_aemet()
         weatherstack = self.get_weatherstack()
-        #tomorrowio = self.get_tomorrowoi()
+        tomorrowio = self.get_tomorrowoi()
 
-        current_temp = (aemet["Current"]["temp"] + weatherstack["Temperature"]) / 2
-        current_wind = (aemet["Current"]["wind"] + weatherstack["Wind"]["wind_speed"]) / 2
+        current_temp = (aemet["Current"]["temp"] + weatherstack["Temperature"] + tomorrowio["Temperature"][0]) / 3
+        current_wind = (aemet["Current"]["wind"] + weatherstack["Wind"]["wind_speed"] + tomorrowio["Wind"]["Speed"][0]) / 3
 
-        CurrentJson["Wind"] = current_wind
-        CurrentJson["Temperature"] = current_temp
-        CurrentJson["UVindex"] = weatherstack["UVindex"]
-
-        """#Antiguo
-        #Manipulación de datos para obtener el valor actual promedio
-        temp_current = []
-
-        temp_current.append(weatherstack["Temperature"])
-        temp_current.append(aemet["Current"]["temp"])
-        temp_current.append(tomorrowio["Temperature"][0])
-
-        temp_current = round(sum(temp_current) / len(temp_current), 2)
-        AllJson["Current"]["temp"] = temp_current
-
-        wind_aux = []
-
-        wind_aux.append(weatherstack["Wind"]["wind_speed"])
-        wind_aux.append(aemet["Current"]["wind"])
-        wind_aux.append(tomorrowio["Wind"]["Speed"][0])
-
-        wind_aux = round(sum(wind_aux) / len(wind_aux), 2)
-        AllJson["Current"]["wind"] = wind_aux
-
-        uv_aux = []
-
-        uv_aux.append(weatherstack["UVindex"])
-        uv_aux.append(tomorrowio["UV"][0])
-
-        uv_aux = round(sum(uv_aux) / len(uv_aux), 2)
-        AllJson["Current"]["uv"] = uv_aux"""
+        CurrentJson["Wind"] = round(current_wind, 2)
+        CurrentJson["Temperature"] = round(current_temp, 2)
+        CurrentJson["UVindex"] = round(weatherstack["UVindex"], 2)
 
         return CurrentJson
     
@@ -153,10 +125,13 @@ class Weather:
 
         for i in range(24):
             aux = round(((list1[i] + list2[i] + list3[i]) / 3), 2)
-            #aux = round(((list1[i] + list2[i]) / 2), 2)
             AllJson["Wind"].append(aux)
 
-        #Obtener de la radiación promedio para las próximas 24 horas (sólo datos de Tomorrow)
+        #Obtener de la radiación promedio para las próximas 24 horas (sólo datos de Tomorrowio)
         AllJson["UV"] = tomorrowio["UV"][1:25]
 
         return AllJson
+    
+result = Weather("W")
+print(result.get_tomorrowoi())
+print(result.get_current())
