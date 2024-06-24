@@ -1,6 +1,7 @@
 from datetime import datetime
 from constants import *
 from functions import *
+import json
 
 class Weather:
     def __init__(self, name):
@@ -54,8 +55,9 @@ class Weather:
         return AemetJs
 
     def get_openweather(self):
-        OpenWeatherData = OpenWeatherRequest(OPENWEATHER_URL)
+        OpenWeatherData = OpenWeatherRequest(OPENWEATHER_URL_3_0)
 
+        """
         wind = [element["wind"]["speed"] for element in OpenWeatherData["list"][:17]]
         temp = [element["main"]["temp"] for element in OpenWeatherData["list"][:17]]
 
@@ -64,6 +66,18 @@ class Weather:
         temp = CalcOW(temp, 17)
 
         OpenWeatherJs["Temperature"] = [round(kelvin_celsius(temperatura),2) for temperatura in temp]
+        """
+
+        OpenWeatherJs["Current"]["temp"] = round(kelvin_celsius(OpenWeatherData["current"]["temp"]),2)
+        OpenWeatherJs["Current"]["wind"] = OpenWeatherData["current"]["wind_speed"]
+        OpenWeatherJs["Current"]["uvi"] = OpenWeatherData["current"]["uvi"]
+
+        OpenWeatherData = OpenWeatherData["hourly"][:24]
+        
+        for data in OpenWeatherData:
+            OpenWeatherJs["Temperature"].append(round(kelvin_celsius(data['temp']),2))
+            OpenWeatherJs["Wind"].append(data['wind_speed'])
+            OpenWeatherJs["UV"].append(data['uvi'])
 
         return OpenWeatherJs
 
@@ -93,13 +107,14 @@ class Weather:
         aemet = self.get_aemet()
         weatherstack = self.get_weatherstack()
         tomorrowio = self.get_tomorrowoi()
+        openweather = self.get_openweather()
 
-        current_temp = (aemet["Current"]["temp"] + weatherstack["Temperature"] + tomorrowio["Temperature"][0]) / 3
-        current_wind = (aemet["Current"]["wind"] + weatherstack["Wind"]["wind_speed"] + tomorrowio["Wind"]["Speed"][0]) / 3
+        current_temp = (aemet["Current"]["temp"] + weatherstack["Temperature"] + tomorrowio["Temperature"][0] + openweather["Current"]["temp"]) / 4
+        current_wind = (aemet["Current"]["wind"] + weatherstack["Wind"]["wind_speed"] + tomorrowio["Wind"]["Speed"][0] + openweather["Current"]["wind"]) / 4
 
         CurrentJson["Wind"] = round(current_wind, 2)
         CurrentJson["Temperature"] = round(current_temp, 2)
-        CurrentJson["UVindex"] = round(weatherstack["UVindex"], 2)
+        CurrentJson["UVindex"] = round((weatherstack["UVindex"] + openweather["Current"]["uvi"]) / 2, 2)
 
         return CurrentJson
     
@@ -109,7 +124,7 @@ class Weather:
         openweather = self.get_openweather()
         
         #Obtención de la temperatura promedio para las próximas 24 horas
-        list1 = openweather["Temperature"][:24]
+        list1 = openweather["Temperature"]
         list2 = aemet["Temperature"][:24]
         list3 = tomorrowio["Temperature"][1:25]
 
@@ -118,7 +133,7 @@ class Weather:
             AllJson["Temperature"].append(aux)
 
         #Obtener de la velocidad del viento promedio para las próximas 24 horas
-        list1 = openweather["Wind"][:24]
+        list1 = openweather["Wind"]
         list2 = aemet["Wind"][:24]
         list3 = tomorrowio["Wind"]["Speed"][1:25]
 
@@ -126,11 +141,17 @@ class Weather:
             aux = round(((list1[i] + list2[i] + list3[i]) / 3), 2)
             AllJson["Wind"].append(aux)
 
-        #Obtener de la radiación promedio para las próximas 24 horas (sólo datos de Tomorrowio)
-        AllJson["UV"] = tomorrowio["UV"][1:25]
+        #Obtener de la radiación promedio para las próximas 24 horas
+        list1 = openweather["UV"]
+        list2 = tomorrowio["UV"][1:25]
+
+        for i in range(24):
+            aux = round(((list1[i] + list2[i]) / 2), 2)
+            AllJson["UV"].append(aux)
 
         return AllJson
     
 result = Weather("W")
-print(result.get_tomorrowoi())
-print(result.get_current())
+data = result.get_weatherstack()
+#print(data["hourly"][:24][0]['temp'])
+print(data)

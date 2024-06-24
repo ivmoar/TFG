@@ -11,7 +11,13 @@ def AemetRequest(URL):
 
 #OPENWEATHER
 def OpenWeatherRequest(URL):
-    response = requests.request("GET", URL)
+    params = {
+        "lat": OPENWEATHER_VALENCIA_LAT,
+        "lon": OPENWEATHER_VALENCIA_LON,
+        "exclude": OPENWEATHER_EXCLUDE,
+        "appid": OPENWEATHER_KEY
+    }
+    response = requests.request("GET", URL, params=params)
     return response.json()
 
 def CalcOW(lista,index):

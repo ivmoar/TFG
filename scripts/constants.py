@@ -24,10 +24,18 @@ OPENWEATHER_VALENCIA_NAME = "Valencia"
 OPENWEATHER_VALENCIA_COD = "200"
 OPENWEATHER_VALENCIA_LON = "-0.378"
 OPENWEATHER_VALENCIA_LAT = "39.47"
-OPENWEATHER_URL = "https://api.openweathermap.org/data/2.5/forecast?lat=39.47&lon=-0.38&appid=9f74a5005ea5ccfd86c211a8bb40cf70" #Tengo que coger la función sin los parámetros y metérselos después
+OPENWEATHER_EXCLUDE = "minutely,daily,alerts"
+OPENWEATHER_URL_2_5 = "https://api.openweathermap.org/data/2.5/forecast?lat=39.47&lon=-0.38&appid=9f74a5005ea5ccfd86c211a8bb40cf70"
+OPENWEATHER_URL_3_0 = "https://api.openweathermap.org/data/3.0/onecall?"
 OpenWeatherJs = {
+    "Current": {
+        "wind": None,
+        "temp": None,
+        "uvi": None
+    }, 
     "Wind": [],
-    "Temperature": []
+    "Temperature": [],
+    "UV": []
 }
 
 #Tomorrow.io
