@@ -12,7 +12,8 @@ class Weather:
 
         # Variables
         hora_actual = datetime.now().time()
-        indice = None
+        indice_t = None
+        indice_w = None
         day_t = 0
         day_w = 0
 
@@ -21,19 +22,19 @@ class Weather:
 
         for i, elemento in enumerate(TempList):
             if elemento["periodo"] == str(hora_actual.hour).zfill(2):
-                indice = i
+                indice_t = i
                 break
 
-        if indice is None:
+        if indice_t is None:
             day_t += 1
             TempList = data[0]["prediccion"]["dia"][day_t]["temperatura"]
             for i, elemento in enumerate(TempList):
                 if elemento["periodo"] == str(hora_actual.hour).zfill(2):
-                    indice = i
+                    indice_t = i
                     break
         
-        indice = len(TempList) - indice
-        TempList = TempList[-indice:]
+        indice_t = len(TempList) - indice_t
+        TempList = TempList[-indice_t:]
         TempList.extend(data[0]["prediccion"]["dia"][day_t + 1]["temperatura"])
 
         currentT = TempList.pop(0)
@@ -46,19 +47,19 @@ class Weather:
 
         for i, elemento in enumerate(WindList):
             if elemento["periodo"] == str(hora_actual.hour).zfill(2):
-                indice = i
+                indice_w = i
                 break
 
-        if indice is None:
+        if indice_w is None:
             day_w += 1
-            WindList = data[0]["prediccion"]["dia"][day_w]["temperatura"]
+            WindList = data[0]["prediccion"]["dia"][day_w]["vientoAndRachaMax"]
             for i, elemento in enumerate(WindList):
                 if elemento["periodo"] == str(hora_actual.hour).zfill(2):
-                    indice = i
+                    indice_w = i
                     break
 
-        indice = len(WindList) - indice
-        WindList = WindList[-indice:]
+        indice_w = len(WindList) - indice_w
+        WindList = WindList[-indice_w:]
         WindList.extend(data[0]["prediccion"]["dia"][day_w + 1]["vientoAndRachaMax"])
         WindList = WindList[::2]
 
@@ -154,8 +155,3 @@ class Weather:
             AllJson["UV"].append(aux)
 
         return AllJson
-    
-result = Weather("W")
-data = result.get_aemet()
-#print(data["hourly"][:24][0]['temp'])
-print(data)
