@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 import sys
 import os
 
@@ -9,7 +9,7 @@ scripts_path = os.path.join(os.path.dirname(__file__), 'scripts')
 if scripts_path not in sys.path:
     sys.path.append(scripts_path)
 
-from scripts import weather, electricity
+from scripts import weather, electricity, functions
 
 app = Flask(__name__)
 
@@ -28,6 +28,9 @@ def execute():
 
     weather_object = weather.Weather("W")
     electricity_object = electricity.Electricity("E")
+
+    weather_data = None
+    current_W_data = None
 
     # Weather
     if param1 == "Aemet":
@@ -57,10 +60,11 @@ def execute():
         w_uv_24= weather_data["UV"]
 
     if param2 == "yes":
-        current = weather_object.get_current()
-        w_temperature_current = current["Temperature"]
-        w_wind_current = current["Wind"]
-        w_uv_current = current["UVindex"]
+        current_W_data = weather_object.get_current()
+        w_temperature_current = current_W_data["Temperature"]
+        w_wind_current = current_W_data["Wind"]
+        w_uv_current = current_W_data["UVindex"]
+        weather_data = {**weather_data, **current_W_data}
     else:
         w_temperature_current = "No selected"
         w_wind_current = "No selected"
@@ -74,7 +78,11 @@ def execute():
     else:
         electricity_current = "No selected"
 
-    return render_template('data.html', w_temperature_current=w_temperature_current, w_wind_current=w_wind_current, w_uv_current=w_uv_current, electricity_current=electricity_current, w_temperature_24=w_temperature_24, w_wind_24=w_wind_24, w_uv_24=w_uv_24, e_avg=electricity_data["AVG"], e_max=electricity_data["Max"]["Price"], e_min=electricity_data["Min"]["Price"], e_nexts=electricity_data["Next"])
+    combined_data = {**electricity_data, **weather_data}
+
+    udp_response = functions.udp_client(combined_data)
+
+    return render_template('data.html', w_temperature_current=w_temperature_current, w_wind_current=w_wind_current, w_uv_current=w_uv_current, electricity_current=electricity_current, w_temperature_24=w_temperature_24, w_wind_24=w_wind_24, w_uv_24=w_uv_24, e_avg=electricity_data["AVG"], e_max=electricity_data["Max"]["Price"], e_min=electricity_data["Min"]["Price"], e_nexts=electricity_data["Next"], udp_response=udp_response)
 
 if __name__ == "__main__":
     app.run(port=8080)

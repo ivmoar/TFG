@@ -1,6 +1,8 @@
 import requests
 import numpy as np
 from constants import *
+import socket
+import json
 
 #AEMET
 def AemetRequest(URL):
@@ -19,18 +21,6 @@ def OpenWeatherRequest(URL):
     }
     response = requests.request("GET", URL, params=params)
     return response.json()
-
-def CalcOW(lista,index):
-    res = []
-    index = len(lista) - 1
-    for i in range(0, index):
-        res.extend(interpolationOW(lista[i], lista[i+1]))
-    return res
-
-def interpolationOW(num1, num2):
-    aux = np.linspace(num1, num2, 4)
-    lista = [round(elemento, 2) for elemento in aux]
-    return lista[1:]
 
 def kelvin_celsius(kelvin):
     return kelvin - 273.15
@@ -93,3 +83,36 @@ def pdllFunction():
     ElectricityJSON["Next"] = lista_json
 
     return ElectricityJSON
+
+# UDP
+def udp_client(data):
+    server_address = (UDP_URL, UDP_PORT)  # Dirección y puerto del servidor UDP
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        message = json.dumps(data)
+        print(f"Enviando mensaje JSON: {message}")
+        client_socket.sendto(message.encode(), server_address)
+        response, _ = client_socket.recvfrom(4096)
+        print(f"Respuesta del servidor UDP: {response.decode()}")
+        return response.decode()
+    finally:
+        client_socket.close()
+
+
+
+
+
+# Other
+"""
+def CalcOW(lista,index):
+    res = []
+    index = len(lista) - 1
+    for i in range(0, index):
+        res.extend(interpolationOW(lista[i], lista[i+1]))
+    return res
+
+def interpolationOW(num1, num2):
+    aux = np.linspace(num1, num2, 4)
+    lista = [round(elemento, 2) for elemento in aux]
+    return lista[1:]
+"""
