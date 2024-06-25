@@ -10,11 +10,7 @@ AemetJs = {
         "temp": None
     },
     "Wind": [],
-    "Temperature": [],
-    "UVMax": {
-        "Today": [],
-        "Tomorrow": []
-    }
+    "Temperature": []
 }
 
 #OpenWeather

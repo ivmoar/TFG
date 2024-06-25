@@ -90,10 +90,8 @@ def udp_client(data):
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         message = json.dumps(data)
-        print(f"Enviando mensaje JSON: {message}")
         client_socket.sendto(message.encode(), server_address)
         response, _ = client_socket.recvfrom(4096)
-        print(f"Respuesta del servidor UDP: {response.decode()}")
         return response.decode()
     finally:
         client_socket.close()

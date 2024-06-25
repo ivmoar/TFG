@@ -50,9 +50,9 @@ def execute():
         w_uv_24= weather_data["UV"]
     elif param1 == "Weather Stack":
         weather_data = weather_object.get_weatherstack()
-        w_temperature_24 = str(weather_data["Temperature"]) + "(Solo se ofrece el valor actual)"
-        w_wind_24 = str(weather_data["Wind"]["wind_speed"]) + "(Solo se ofrece el valor actual)"
-        w_uv_24 = str(weather_data["UVindex"]) + "(Solo se ofrece el valor actual)"
+        w_temperature_24 = str(weather_data["Temperature"]) + " (Solo se ofrece el valor actual)"
+        w_wind_24 = str(weather_data["Wind"]["wind_speed"]) + " (Solo se ofrece el valor actual)"
+        w_uv_24 = str(weather_data["UVindex"]) + " (Solo se ofrece el valor actual)"
     elif param1 == "All":
         weather_data = weather_object.get_all()
         w_temperature_24 = weather_data["Temperature"]

@@ -165,3 +165,21 @@ button:hover {
 .button-link:hover {
     background-color: rgb(36, 70, 114);
 }
+
+/* Estilos para la respuesta UDP */
+.udp-container {
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    text-align: center;
+}
+
+.udp-message {
+    padding: 10px 20px;
+    background-color: dimgray;
+    color: white;
+    border: 0;
+    border-radius: 20px;
+    text-decoration: none;
+    display: inline-block;
+}

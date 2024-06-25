@@ -13,51 +13,59 @@ class Weather:
         # Variables
         hora_actual = datetime.now().time()
         indice = None
-        day = 0
-
-        # Obtener día
-        TempList = data[day]["prediccion"]["dia"][0]["temperatura"]
-        for i, elemento in enumerate(TempList):
-            if elemento["periodo"] == str(hora_actual.hour):
-                day += 1
-                break
+        day_t = 0
+        day_w = 0
 
         #Datos Temperatura
-        TempList = data[day]["prediccion"]["dia"][0]["temperatura"]
+        TempList = data[0]["prediccion"]["dia"][day_t]["temperatura"]
 
         for i, elemento in enumerate(TempList):
-            if elemento["periodo"] == str(hora_actual.hour):
+            if elemento["periodo"] == str(hora_actual.hour).zfill(2):
                 indice = i
                 break
 
-        if indice is not None:
-            indice = len(TempList) - indice
-            TempList = TempList[-indice:]
-            TempList.extend(data[day + 1]["prediccion"]["dia"][0]["temperatura"])
+        if indice is None:
+            day_t += 1
+            TempList = data[0]["prediccion"]["dia"][day_t]["temperatura"]
+            for i, elemento in enumerate(TempList):
+                if elemento["periodo"] == str(hora_actual.hour).zfill(2):
+                    indice = i
+                    break
+        
+        indice = len(TempList) - indice
+        TempList = TempList[-indice:]
+        TempList.extend(data[0]["prediccion"]["dia"][day_t + 1]["temperatura"])
 
-            currentT = TempList.pop(0)
+        currentT = TempList.pop(0)
 
-            AemetJs["Current"]["temp"] = int(currentT["value"])
-            AemetJs["Temperature"] = [int(elemento["value"]) for elemento in TempList]
+        AemetJs["Current"]["temp"] = int(currentT["value"])
+        AemetJs["Temperature"] = [int(elemento["value"]) for elemento in TempList]
 
         #Datos viento
-        WindList = data[day]["prediccion"]["dia"][0]["vientoAndRachaMax"]
+        WindList = data[0]["prediccion"]["dia"][day_w]["vientoAndRachaMax"]
 
         for i, elemento in enumerate(WindList):
-            if elemento["periodo"] == str(hora_actual.hour):
+            if elemento["periodo"] == str(hora_actual.hour).zfill(2):
                 indice = i
                 break
 
-        if indice is not None:
-            indice = len(WindList) - indice
-            WindList = WindList[-indice:]
-            WindList.extend(data[day + 1]["prediccion"]["dia"][0]["vientoAndRachaMax"])
-            WindList = WindList[::2]
+        if indice is None:
+            day_w += 1
+            WindList = data[0]["prediccion"]["dia"][day_w]["temperatura"]
+            for i, elemento in enumerate(WindList):
+                if elemento["periodo"] == str(hora_actual.hour).zfill(2):
+                    indice = i
+                    break
 
-            currentW = WindList.pop(0)
+        indice = len(WindList) - indice
+        WindList = WindList[-indice:]
+        WindList.extend(data[0]["prediccion"]["dia"][day_w + 1]["vientoAndRachaMax"])
+        WindList = WindList[::2]
 
-            AemetJs["Current"]["wind"] = int(currentW["velocidad"][0])
-            AemetJs["Wind"] = [int(elemento["velocidad"][0]) for elemento in WindList]
+        currentW = WindList.pop(0)
+
+        AemetJs["Current"]["wind"] = int(currentW["velocidad"][0])
+        AemetJs["Wind"] = [int(elemento["velocidad"][0]) for elemento in WindList]
 
         return AemetJs
 
@@ -148,6 +156,6 @@ class Weather:
         return AllJson
     
 result = Weather("W")
-data = result.get_openweather()
+data = result.get_aemet()
 #print(data["hourly"][:24][0]['temp'])
 print(data)
