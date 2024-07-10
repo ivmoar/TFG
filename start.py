@@ -31,6 +31,16 @@ def execute():
 
     weather_data = None
     current_W_data = None
+    global_weather = {
+    "Current": {
+        "wind": None,
+        "temp": None,
+        "uv": None
+    }, 
+    "Wind": [],
+    "Temperature": [],
+    "UV": []
+    }
 
     # Weather
     if param1 == "Aemet":
@@ -38,33 +48,61 @@ def execute():
         w_temperature_24 = weather_data["Temperature"]
         w_wind_24 = weather_data["Wind"]
         w_uv_24 = "No hay valores"
+
+        global_weather["Wind"] = w_wind_24
+        global_weather["Temperature"] = w_temperature_24
+        global_weather["UV"] = []
+
     elif param1 == "Open Weather":
         weather_data = weather_object.get_openweather()
         w_temperature_24 = weather_data["Temperature"]
         w_wind_24 = weather_data["Wind"]
         w_uv_24 = "No hay valores"
+
+        global_weather["Wind"] = w_wind_24
+        global_weather["Temperature"] = w_temperature_24
+        global_weather["UV"] = []
+
     elif param1 == "Tomorrow.io":
         weather_data = weather_object.get_tomorrowoi()
         w_temperature_24 = weather_data["Temperature"]
         w_wind_24 = weather_data["Wind"]["Speed"]
         w_uv_24= weather_data["UV"]
+
+        global_weather["Wind"] = w_wind_24
+        global_weather["Temperature"] = w_temperature_24
+        global_weather["UV"] = w_uv_24
+
     elif param1 == "Weather Stack":
         weather_data = weather_object.get_weatherstack()
         w_temperature_24 = str(weather_data["Temperature"]) + " (Solo se ofrece el valor actual)"
         w_wind_24 = str(weather_data["Wind"]["wind_speed"]) + " (Solo se ofrece el valor actual)"
         w_uv_24 = str(weather_data["UVindex"]) + " (Solo se ofrece el valor actual)"
+
+        global_weather["Current"]["wind"] = str(weather_data["Wind"]["wind_speed"])
+        global_weather["Current"]["temp"] = str(weather_data["Temperature"])
+        global_weather["Current"]["uv"] = str(weather_data["UVindex"])
+
     elif param1 == "All":
         weather_data = weather_object.get_all()
         w_temperature_24 = weather_data["Temperature"]
         w_wind_24 = weather_data["Wind"]
         w_uv_24= weather_data["UV"]
 
+        global_weather["Wind"] = w_wind_24
+        global_weather["Temperature"] = w_temperature_24
+        global_weather["UV"] = w_uv_24
+
     if param2 == "yes":
         current_W_data = weather_object.get_current()
         w_temperature_current = current_W_data["Temperature"]
         w_wind_current = current_W_data["Wind"]
         w_uv_current = current_W_data["UVindex"]
-        weather_data = {**weather_data, **current_W_data}
+        
+        global_weather["Current"]["wind"] = w_wind_current
+        global_weather["Current"]["temp"] = w_temperature_current
+        global_weather["Current"]["uv"] = w_uv_current
+
     else:
         w_temperature_current = "No selected"
         w_wind_current = "No selected"
@@ -78,7 +116,7 @@ def execute():
     else:
         electricity_current = "No selected"
 
-    combined_data = {**electricity_data, **weather_data}
+    combined_data = {**electricity_data, **global_weather}
 
     udp_response = functions.udp_client(combined_data)
 
